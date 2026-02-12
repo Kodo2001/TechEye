@@ -1,50 +1,51 @@
-import { Menu } from 'antd';
-import { useNavigate, useLocation } from 'react-router-dom';
-import {
-  ShoppingOutlined,
-  LogoutOutlined,
-  AppstoreOutlined,
-} from '@ant-design/icons';
-import type { MenuProps } from 'antd';
-import { useAuth } from '../../contexts/AuthContext';
+import { Menu } from "antd";
+import { useNavigate, useLocation } from "react-router-dom";
+import { ShoppingOutlined, LogoutOutlined, AppstoreOutlined } from "@ant-design/icons";
+import type { MenuProps } from "antd";
+import { useAuth } from "../../contexts/AuthContext";
 
-export const Sidebar = () => {
+export const Sidebar = ({ onItemClick }: { onItemClick?: () => void }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { logout } = useAuth();
 
-  const menuItems: MenuProps['items'] = [
+  const menuItems: MenuProps["items"] = [
     {
-      key: '/',
-      icon: <AppstoreOutlined style={{ color: 'white' }} />,
-      label: 'Dashboard',
-      onClick: () => navigate('/'),
-
+      key: "/",
+      icon: <AppstoreOutlined />,
+      label: "Dashboard",
+      onClick: () => {
+        navigate("/");
+        onItemClick?.();
+      },
     },
     {
-      key: '/products',
-      icon: <ShoppingOutlined style={{ color: 'white' }} />,
-      label: 'Products',
-      onClick: () => navigate('/products'),
+      key: "/products",
+      icon: <ShoppingOutlined />,
+      label: "Products",
+      onClick: () => {
+        navigate("/products");
+        onItemClick?.();
+      },
     },
+    { type: "divider" },
     {
-      type: 'divider',
-    },
-    {
-      key: 'logout',
-      icon: <LogoutOutlined style={{ color: 'white' }} />,
-      label: 'Logout',
+      key: "logout",
+      icon: <LogoutOutlined />,
+      label: "Logout",
       danger: true,
       onClick: () => {
         logout();
-        navigate('/login');
+        navigate("/login");
+        onItemClick?.();
       },
     },
   ];
 
-  const selectedKey = location.pathname === '/products' || location.pathname.startsWith('/products/')
-    ? '/products'
-    : location.pathname;
+  const selectedKey =
+    location.pathname === "/products" || location.pathname.startsWith("/products/")
+      ? "/products"
+      : location.pathname;
 
   return (
     <Menu
@@ -52,8 +53,7 @@ export const Sidebar = () => {
       selectedKeys={[selectedKey]}
       items={menuItems}
       className="h-full border-r-0"
-      theme='dark'
-      defaultOpenKeys={['/products']}
+      theme="dark"
     />
   );
 };
